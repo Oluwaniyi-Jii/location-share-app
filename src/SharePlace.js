@@ -3,6 +3,9 @@ import { Map } from './UI/Map';
 import { getCoordsFromAddress, getAddressFromCoords } from './Utility/Location';
 
 class PlaceFinder {
+  /**
+   * We are adding event listeners to the locate user button and the address form
+   */
   constructor() {
     const addressForm = document.querySelector('form');
     const locateUserBtn = document.getElementById('locate-btn');
@@ -13,6 +16,13 @@ class PlaceFinder {
     addressForm.addEventListener('submit', this.findAddressHandler.bind(this));
   }
 
+ /**
+  * It takes in the coordinates and address of the place, renders the map with the coordinates, enables
+  * the share button, and sets the value of the share link input to the current URL with the address
+  * and coordinates appended to it
+  * @param coordinates - The latitude and longitude of the place.
+  * @param address - The address of the place
+  */
   selectPlace(coordinates, address) {
     if (this.map) {
       this.map.render(coordinates);
@@ -24,6 +34,11 @@ class PlaceFinder {
     sharedLinkInputElement.value = `${location.origin}/my-place?address=${encodeURI(address)}&lat=${coordinates.lat}&lng=${coordinates.lng}`;
   }
 
+  /**
+   * It shows a modal, gets the user's location, gets the address from the coordinates, hides the
+   * modal, and then selects the place
+   * @returns the address of the user.
+   */
   locateUserHandler() {
     if (!navigator.geolocation) {
       alert(
@@ -55,6 +70,12 @@ class PlaceFinder {
     );
   }
 
+  /**
+   * It takes the address entered by the user, gets the coordinates of that address, and then calls the
+   * selectPlace function with those coordinates and the address
+   * @param event - The event object that was triggered by the user.
+   * @returns a promise.
+   */
   async findAddressHandler(event) {
     event.preventDefault();
     const address = event.target.querySelector('input').value;
